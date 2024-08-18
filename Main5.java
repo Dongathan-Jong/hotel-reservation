@@ -169,11 +169,111 @@ public class Main5 {
    }
 
    public static int checkEmployeePinNumber(String employeeNumberInputString, String employeePinNumberInputString) {
-      
+      final String EMPLOYEE_DATA_FILE = "employeeData.txt";
+      int returnValueInt = 1;
+      String line;
+      int employeeNumberInputInt;
+      int employeePinNumberInputInt;
+      String[] employeeLines;
+
+      try {
+         BufferedReader in = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE));
+
+         try {
+            employeeNumberInputInt = Integer.parseInt(employeeNumberInputString);
+            employeePinNumberInputInt = Integer.parseInt(employeePinNumberInputString);
+            line = in.readLine();
+
+            while (line != null) {
+               employeeLines = line.split(", ");
+
+               if (returnValueInt == 1) {
+                  if (employeePinNumberInputInt == 0) {
+                     returnValueInt = 0;
+                  } else if ((employeeNumberInputInt == (Integer.parseInt(employeeLines[2]))) && (employeePinNumberInputInt == (Integer.parseInt(employeeLines[3])))) {
+                     returnValueInt = 2;
+                  } else {
+                     returnValueInt = 1;
+                  }
+               }
+               line = in.readLine();
+            }
+         } catch (NumberFormatException e) {
+            System.out.println("This employee number does not exist. Please enter your 6 digit employee number. \n");
+            returnValueInt = 1;
+         }
+         in.close();
+      } catch (IOException e) {
+         System.out.println(e + " error in " + EMPLOYEE_DATA_FILE);
+         returnValueInt = 1;
+      }
+
+      if (returnValueInt == 1) {
+         System.out.println("Incorrect PIN number. Try again. \n");
+      }
+      return returnValueInt;
    }
 
    public static String askForDate() {
-      
+      Scanner sc = new Scanner(System.in);
+      int monthInt;
+      int dayInt;
+      int yearInt;
+      String monthStr = "";
+      String dayStr = "";
+      String yearStr = "";
+      boolean monthEnteredGood = false;
+      boolean dayEnteredGood = false;
+      boolean yearEnteredGood = false;
+      String fullDate = "";
+
+      System.out.println("Please enter the following:");
+
+      while (!monthEnteredGood) {
+         try {
+            System.out.print("Enter month: ");
+            monthInt = sc.nextInt();
+            monthStr = "" + monthInt;
+
+            if ((monthInt <= 12) && (monthInt >= 1)) {
+               if (monthStr.length() != 2) {
+                  monthStr = "0" + monthStr;
+               }
+               monthEnteredGood = true;
+            } else {
+               System.out.println("Please enter a month within the range of 1-12");
+               monthEnteredGood = false;
+            }
+         } catch (InputMismatchException e) {
+            System.out.println("Please enter an integer for month. Try again");
+            sc.next();
+            monthEnteredGood = false;
+         }
+      }
+
+      while (!dayEnteredGood) {
+         try {
+            System.out.print("Enter day: ");
+            dayInt = sc.nextInt();
+            dayStr = "" + dayInt;
+
+            if ((dayInt <= 31) && (dayInt >= 1)) {
+               if (dayStr.length() != 2) {
+                  dayStr = "0" + dayStr;
+               }
+               dayEnteredGood = true;
+            } else {
+               System.out.println("Please enter a day within the range of 1-31");
+               dayEnteredGood = false;
+            }
+         } catch (InputMismatchException e) {
+            System.out.println("Please enter an integer for day. Try again");
+            sc.next();
+            dayEnteredGood = false;
+         }
+      }
+
+     
    }
 
    public static void availableRoomsPerDate(String fullDate) {
