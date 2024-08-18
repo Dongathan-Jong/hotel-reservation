@@ -375,10 +375,89 @@ public class Main5 {
    }
 
    public static void allReservationsPerName() {
-      
+      final String BOOKING_DATA_FILE = "bookingData.txt";
+      String bookingDataLine;
+      String[] bookingDataLines;
+      String name;
+      ArrayList<String> reservations = new ArrayList<>();
+      Scanner sc = new Scanner(System.in);
+
+      System.out.print("Enter the customer name: ");
+      name = sc.nextLine();
+
+      try {
+         BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE));
+         bookingDataLine = bookingIn.readLine();
+
+         while (bookingDataLine != null) {
+            bookingDataLines = bookingDataLine.split(", ");
+
+            if (bookingDataLines[2].equalsIgnoreCase(name)) {
+               reservations.add(bookingDataLine);
+            }
+            bookingDataLine = bookingIn.readLine();
+         }
+
+         bookingIn.close();
+      } catch (IOException e) {
+         System.out.println("Error reading booking data file.");
+      }
+
+      System.out.println("Reservations under " + name + ":");
+      for (String reservation : reservations) {
+         System.out.println(reservation);
+      }
    }
 
    public static void bookingReservations() {
-      
+      final String BOOKING_DATA_FILE = "bookingData.txt";
+      final String ROOM_DATA_FILE = "hotelRoomData.txt";
+      Scanner sc = new Scanner(System.in);
+      String roomNumber;
+      String fullDate;
+      String name;
+      boolean roomAvailable = true;
+      ArrayList<String> bookedRooms = new ArrayList<>();
+
+      System.out.print("Enter customer name: ");
+      name = sc.nextLine();
+
+      fullDate = askForDate();
+      availableRoomsPerDate(fullDate);
+
+      System.out.print("Enter room number: ");
+      roomNumber = sc.nextLine();
+
+      try {
+         BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE));
+         String bookingDataLine = bookingIn.readLine();
+
+         while (bookingDataLine != null) {
+            String[] bookingDataLines = bookingDataLine.split(", ");
+
+            if (bookingDataLines[0].equals(roomNumber) && bookingDataLines[1].equals(fullDate)) {
+               roomAvailable = false;
+            }
+            bookingDataLine = bookingIn.readLine();
+         }
+
+         bookingIn.close();
+      } catch (IOException e) {
+         System.out.println("Error reading booking data file.");
+      }
+
+      if (roomAvailable) {
+         try {
+            BufferedWriter bookingOut = new BufferedWriter(new FileWriter(BOOKING_DATA_FILE, true));
+            bookingOut.write(roomNumber + ", " + fullDate + ", " + name);
+            bookingOut.newLine();
+            bookingOut.close();
+            System.out.println("Reservation successfully booked for " + name + " on " + fullDate + " in room " + roomNumber + ".");
+         } catch (IOException e) {
+            System.out.println("Error writing to booking data file.");
+         }
+      } else {
+         System.out.println("The room " + roomNumber + " is already booked on " + fullDate + ".");
+      }
    }
 }
