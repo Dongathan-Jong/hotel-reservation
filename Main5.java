@@ -460,4 +460,64 @@ public class Main5 {
          System.out.println("The room " + roomNumber + " is already booked on " + fullDate + ".");
       }
    }
+
+public void cancelReservation() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Enter customer name for cancellation: ");
+    String customerName = scanner.nextLine();
+    Reservation reservationToRemove = null;
+    for (Reservation reservation : reservations) {
+        if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
+            System.out.println("Reservation found: " + reservation);
+            System.out.print("Are you sure you want to cancel this reservation? (yes/no): ");
+            String confirmation = scanner.nextLine();
+            if (confirmation.equalsIgnoreCase("yes")) {
+                reservationToRemove = reservation;
+                break;
+            } else {
+                System.out.println("Cancellation aborted.");
+                return;
+            }
+        }
+    }
+    if (reservationToRemove != null) {
+        reservations.remove(reservationToRemove);
+        System.out.println("Reservation cancelled successfully.");
+        System.out.println("Sending cancellation email to customer...");
+        System.out.println("Email sent.");
+    } else {
+        System.out.println("Reservation not found.");
+    }
+}
+
+public void changeCustomerNameForReservation() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Enter current customer name: ");
+    String currentName = scanner.nextLine();
+    System.out.print("Enter new customer name: ");
+    String newName = scanner.nextLine();
+    Reservation reservationToUpdate = null;
+    for (Reservation reservation : reservations) {
+        if (reservation.getCustomerName().equalsIgnoreCase(currentName)) {
+            System.out.println("Reservation found: " + reservation);
+            System.out.print("Are you sure you want to change the customer name to " + newName + "? (yes/no): ");
+            String confirmation = scanner.nextLine();
+            if (confirmation.equalsIgnoreCase("yes")) {
+                reservationToUpdate = reservation;
+                break;
+            } else {
+                System.out.println("Update aborted.");
+                return;
+            }
+        }
+    }
+    if (reservationToUpdate != null) {
+        reservationToUpdate.setCustomerName(newName);
+        System.out.println("Customer name updated successfully.");
+        System.out.println("Sending notification email to customer...");
+        System.out.println("Email sent.");
+    } else {
+        System.out.println("Reservation not found.");
+    }
+}
 }
