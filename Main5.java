@@ -102,11 +102,70 @@ public class Main5 {
             employeeNumAndPinMatch = 1;
          }
 
-         
+         while (employeeNumAndPinMatch == 1) {
+            System.out.print("\nEnter your Employee PIN Number: ");
+            employeePinNumberInputString = sc.nextLine();
+            employeeNumAndPinMatch = checkEmployeePinNumber(employeeNumberInputString, employeePinNumberInputString);
+
+            if (employeeNumAndPinMatch == 0) {
+               employeeLoginPortal = false;
+               goodEmployeeNumber = 1;
+            } else {
+               goodEmployeeNumber = 2;
+               employeeLoginPortal = true;
+            }
+         }
+      }
+      return returnValueInt;
    }
 
    public static int checkEmployeeNumber(String employeeNumberInputString) {
-      
+      final String EMPLOYEE_DATA_FILE = "employeeData.txt";
+      String line;
+      int employeeNumberInputInt;
+      String[] employeeLines;
+      int returnValueInt = 1;
+
+      try {
+         BufferedReader in = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE));
+
+         try {
+            employeeNumberInputInt = Integer.parseInt(employeeNumberInputString);
+            line = in.readLine();
+
+            while (line != null) {
+               employeeLines = line.split(", ");
+
+               if (returnValueInt == 1) {
+                  if (employeeNumberInputInt == (Integer.parseInt(employeeLines[2]))) {
+                     if (employeeNumberInputString.length() == 6) {
+                        if (employeeNumberInputInt == 000000) {
+                           returnValueInt = 0;
+                        } else {
+                           returnValueInt = 2;
+                        }
+                     } else {
+                        returnValueInt = 1;
+                     }
+                  } else {
+                     returnValueInt = 1;
+                  }
+               }
+               line = in.readLine();
+            }
+         } catch (NumberFormatException e) {
+            System.out.println("Please enter your 6 digit employee number. \n");
+            returnValueInt = 1;
+         }
+         in.close();
+      } catch (IOException e) {
+         System.out.println(e + " error reading " + EMPLOYEE_DATA_FILE);
+      }
+
+      if (returnValueInt == 1) {
+         System.out.println("That employee number does not exist. \n");
+      }
+      return returnValueInt;
    }
 
    public static int checkEmployeePinNumber(String employeeNumberInputString, String employeePinNumberInputString) {
