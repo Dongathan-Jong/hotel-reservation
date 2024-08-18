@@ -273,15 +273,105 @@ public class Main5 {
          }
       }
 
-     
+      while (!yearEnteredGood) {
+         try {
+            System.out.print("Enter year: ");
+            yearInt = sc.nextInt();
+            yearStr = "" + yearInt;
+
+            if ((yearStr.length() == 4) && (yearInt >= 2020)) {
+               yearEnteredGood = true;
+            } else {
+               System.out.println("Please enter a 4 digit year (ex: 2022)");
+               yearEnteredGood = false;
+            }
+         } catch (InputMismatchException e) {
+            System.out.println("Please enter an integer for year. Try again");
+            sc.next();
+            yearEnteredGood = false;
+         }
+      }
+      fullDate = monthStr + "/" + dayStr + "/" + yearStr;
+      sc.nextLine();
+      return fullDate;
    }
 
    public static void availableRoomsPerDate(String fullDate) {
-      
+      final String ROOM_DATA_FILE = "hotelRoomData.txt";
+      final String BOOKING_DATA_FILE = "bookingData.txt";
+      String roomDataLine;
+      String bookingDataLine;
+      String[] roomDataLines;
+      String[] bookingDataLines;
+      ArrayList<String> availableRooms = new ArrayList<>();
+
+      try {
+         BufferedReader roomIn = new BufferedReader(new FileReader(ROOM_DATA_FILE));
+         roomDataLine = roomIn.readLine();
+
+         while (roomDataLine != null) {
+            roomDataLines = roomDataLine.split(", ");
+            availableRooms.add(roomDataLines[0]);
+            roomDataLine = roomIn.readLine();
+         }
+
+         roomIn.close();
+      } catch (IOException e) {
+         System.out.println("Error reading room data file.");
+      }
+
+      try {
+         BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE));
+         bookingDataLine = bookingIn.readLine();
+
+         while (bookingDataLine != null) {
+            bookingDataLines = bookingDataLine.split(", ");
+
+            if (bookingDataLines[1].equals(fullDate)) {
+               availableRooms.remove(bookingDataLines[0]);
+            }
+            bookingDataLine = bookingIn.readLine();
+         }
+
+         bookingIn.close();
+      } catch (IOException e) {
+         System.out.println("Error reading booking data file.");
+      }
+
+      System.out.println("Available Rooms on " + fullDate + ":");
+      for (String room : availableRooms) {
+         System.out.println(room);
+      }
    }
 
    public static void allReservationsPerDate(String fullDate) {
-      
+      final String BOOKING_DATA_FILE = "bookingData.txt";
+      String bookingDataLine;
+      String[] bookingDataLines;
+      ArrayList<String> reservations = new ArrayList<>();
+
+      try {
+         BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE));
+         bookingDataLine = bookingIn.readLine();
+
+         while (bookingDataLine != null) {
+            bookingDataLines = bookingDataLine.split(", ");
+
+            if (bookingDataLines[1].equals(fullDate)) {
+               reservations.add(bookingDataLine);
+            }
+            bookingDataLine = bookingIn.readLine();
+         }
+
+         bookingIn.close();
+      } catch (IOException e) {
+         System.out.println("Error reading booking data file.");
+      }
+
+      System.out.println("Reservations on " + fullDate + ":");
+      for (String reservation : reservations) {
+         System.out.println(reservation);
+      }
    }
 
    public static void allReservationsPerName() {
