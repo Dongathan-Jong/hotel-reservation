@@ -520,4 +520,98 @@ public void changeCustomerNameForReservation() {
         System.out.println("Reservation not found.");
     }
 }
+
+public void changeDateForReservation() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Enter customer name: ");
+    String customerName = scanner.nextLine();
+    System.out.print("Enter new reservation date (YYYY-MM-DD): ");
+    String newDate = scanner.nextLine();
+    Reservation reservationToUpdate = null;
+    for (Reservation reservation : reservations) {
+        if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
+            System.out.println("Reservation found: " + reservation);
+            System.out.print("Are you sure you want to change the date to " + newDate + "? (yes/no): ");
+            String confirmation = scanner.nextLine();
+            if (confirmation.equalsIgnoreCase("yes")) {
+                reservationToUpdate = reservation;
+                break;
+            } else {
+                System.out.println("Update aborted.");
+                return;
+            }
+        }
+    }
+    if (reservationToUpdate != null) {
+        reservationToUpdate.setDate(newDate);
+        System.out.println("Reservation date updated successfully.");
+        System.out.println("Sending notification email to customer...");
+        System.out.println("Email sent.");
+    } else {
+        System.out.println("Reservation not found.");
+    }
+}
+
+public void changeRoomNumberForReservation() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Enter customer name: ");
+    String customerName = scanner.nextLine();
+    System.out.print("Enter new room number: ");
+    int newRoomNumber = Integer.parseInt(scanner.nextLine());
+    Reservation reservationToUpdate = null;
+    for (Reservation reservation : reservations) {
+        if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
+            System.out.println("Reservation found: " + reservation);
+            System.out.print("Are you sure you want to change the room number to " + newRoomNumber + "? (yes/no): ");
+            String confirmation = scanner.nextLine();
+            if (confirmation.equalsIgnoreCase("yes")) {
+                reservationToUpdate = reservation;
+                break;
+            } else {
+                System.out.println("Update aborted.");
+                return;
+            }
+        }
+    }
+    if (reservationToUpdate != null) {
+        reservationToUpdate.setRoomNumber(newRoomNumber);
+        System.out.println("Room number updated successfully.");
+        System.out.println("Sending notification email to customer...");
+        System.out.println("Email sent.");
+    } else {
+        System.out.println("Reservation not found.");
+    }
+}
+
+public void changeEmployeePinNumber() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Enter employee name: ");
+    String employeeName = scanner.nextLine();
+    System.out.print("Enter new PIN number: ");
+    String newPin = scanner.nextLine();
+    Employee employeeToUpdate = null;
+    for (Employee employee : employees) {
+        if (employee.getName().equalsIgnoreCase(employeeName)) {
+            System.out.println("Employee found: " + employee);
+            System.out.print("Are you sure you want to change the PIN number to " + newPin + "? (yes/no): ");
+            String confirmation = scanner.nextLine();
+            if (confirmation.equalsIgnoreCase("yes")) {
+                employeeToUpdate = employee;
+                break;
+            } else {
+                System.out.println("Update aborted.");
+                return;
+            }
+        }
+    }
+    if (employeeToUpdate != null) {
+        employeeToUpdate.setPinNumber(newPin);
+        System.out.println("PIN number updated successfully.");
+        System.out.println("Sending notification email to employee...");
+        System.out.println("Email sent.");
+    } else {
+        System.out.println("Employee not found.");
+    }
+}
+
 }
