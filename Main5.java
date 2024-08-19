@@ -420,180 +420,179 @@ public void cancelReservation() {
     }
 }
 
-public void changeCustomerNameForReservation() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter current customer name: ");
-    String currentName = scanner.nextLine();
-    System.out.print("Enter new customer name: ");
-    String newName = scanner.nextLine();
-    Reservation reservationToUpdate = null;
-    for (Reservation reservation : reservations) {
-        if (reservation.getCustomerName().equalsIgnoreCase(currentName)) {
-            System.out.println("Reservation found: " + reservation);
-            System.out.print("Are you sure you want to change the customer name to " + newName + "? (yes/no): ");
-            String confirmation = scanner.nextLine();
-            if (confirmation.equalsIgnoreCase("yes")) {
-                reservationToUpdate = reservation;
-                break;
-            } else {
-                System.out.println("Update aborted.");
-                return;
-            }
-        }
-    }
-    if (reservationToUpdate != null) {
-        reservationToUpdate.setCustomerName(newName);
-        System.out.println("Customer name updated successfully.");
-        System.out.println("Sending notification email to customer...");
-        System.out.println("Email sent.");
-    } else {
-        System.out.println("Reservation not found.");
-    }
-}
-
 public class HotelManagement {
 
     private List<Reservation> reservations = new ArrayList<>();
     private List<Room> rooms = new ArrayList<>();
     private List<Employee> employees = new ArrayList<>();
 
-    public void changeDateForReservation() {
+    public void changeCustomerNameForReservation() {
         Scanner scanner = new Scanner(System.in);
-        try {
-            System.out.print("Enter customer name: ");
-            String customerName = scanner.nextLine();
-            if (customerName.isEmpty()) {
-                System.out.println("Customer name cannot be empty.");
-                return;
-            }
-
-            System.out.print("Enter new reservation date (YYYY-MM-DD): ");
-            String newDate = scanner.nextLine();
-            if (newDate.isEmpty()) {
-                System.out.println("Date cannot be empty.");
-                return;
-            }
-
-            Reservation reservationToUpdate = null;
-            for (Reservation reservation : reservations) {
-                if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
-                    System.out.println("Reservation found: " + reservation);
-                    System.out.print("Are you sure you want to change the date to " + newDate + "? (yes/no): ");
-                    String confirmation = scanner.nextLine();
-                    if (confirmation.equalsIgnoreCase("yes")) {
-                        reservationToUpdate = reservation;
-                        break;
-                    } else {
-                        System.out.println("Update aborted.");
-                        return;
-                    }
+        System.out.print("Enter current customer name: ");
+        String currentName = scanner.nextLine();
+        System.out.print("Enter new customer name: ");
+        String newName = scanner.nextLine();
+        Reservation reservationToUpdate = null;
+        for (Reservation reservation : reservations) {
+            if (reservation.getCustomerName().equalsIgnoreCase(currentName)) {
+                System.out.println("Reservation found: " + reservation);
+                System.out.print("Are you sure you want to change the customer name to " + newName + "? (yes/no): ");
+                String confirmation = scanner.nextLine();
+                if (confirmation.equalsIgnoreCase("yes")) {
+                    reservationToUpdate = reservation;
+                    break;
+                } else {
+                    System.out.println("Update aborted.");
+                    return;
                 }
             }
+        }
+        if (reservationToUpdate != null) {
+            reservationToUpdate.setCustomerName(newName);
+            System.out.println("Customer name updated successfully.");
+            sendNotificationEmail(reservationToUpdate.getCustomerEmail(), "Customer name updated", "Your customer name has been updated to " + newName + ".");
+        } else {
+            System.out.println("Reservation not found.");
+        }
+    }
 
-            if (reservationToUpdate != null) {
-                reservationToUpdate.setDate(newDate);
-                System.out.println("Reservation date updated successfully.");
-                System.out.println("Sending notification email to customer...");
-                System.out.println("Email sent.");
-            } else {
-                System.out.println("Reservation not found.");
+    public void changeDateForReservation() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter customer name: ");
+        String customerName = scanner.nextLine();
+        System.out.print("Enter new reservation date (YYYY-MM-DD): ");
+        String newDate = scanner.nextLine();
+        Reservation reservationToUpdate = null;
+        for (Reservation reservation : reservations) {
+            if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
+                System.out.println("Reservation found: " + reservation);
+                System.out.print("Are you sure you want to change the date to " + newDate + "? (yes/no): ");
+                String confirmation = scanner.nextLine();
+                if (confirmation.equalsIgnoreCase("yes")) {
+                    reservationToUpdate = reservation;
+                    break;
+                } else {
+                    System.out.println("Update aborted.");
+                    return;
+                }
             }
-        } finally {
-            scanner.close();
+        }
+        if (reservationToUpdate != null) {
+            reservationToUpdate.setDate(newDate);
+            System.out.println("Reservation date updated successfully.");
+            sendNotificationEmail(reservationToUpdate.getCustomerEmail(), "Reservation date updated", "Your reservation date has been updated to " + newDate + ".");
+        } else {
+            System.out.println("Reservation not found.");
         }
     }
 
     public void changeRoomNumberForReservation() {
         Scanner scanner = new Scanner(System.in);
-        try {
-            System.out.print("Enter customer name: ");
-            String customerName = scanner.nextLine();
-            if (customerName.isEmpty()) {
-                System.out.println("Customer name cannot be empty.");
-                return;
-            }
-
-            System.out.print("Enter new room number: ");
-            int newRoomNumber;
-            try {
-                newRoomNumber = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid room number format.");
-                return;
-            }
-
-            Reservation reservationToUpdate = null;
-            for (Reservation reservation : reservations) {
-                if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
-                    System.out.println("Reservation found: " + reservation);
-                    System.out.print("Are you sure you want to change the room number to " + newRoomNumber + "? (yes/no): ");
-                    String confirmation = scanner.nextLine();
-                    if (confirmation.equalsIgnoreCase("yes")) {
-                        reservationToUpdate = reservation;
-                        break;
-                    } else {
-                        System.out.println("Update aborted.");
-                        return;
-                    }
+        System.out.print("Enter customer name: ");
+        String customerName = scanner.nextLine();
+        System.out.print("Enter new room number: ");
+        int newRoomNumber = Integer.parseInt(scanner.nextLine());
+        Reservation reservationToUpdate = null;
+        for (Reservation reservation : reservations) {
+            if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
+                System.out.println("Reservation found: " + reservation);
+                System.out.print("Are you sure you want to change the room number to " + newRoomNumber + "? (yes/no): ");
+                String confirmation = scanner.nextLine();
+                if (confirmation.equalsIgnoreCase("yes")) {
+                    reservationToUpdate = reservation;
+                    break;
+                } else {
+                    System.out.println("Update aborted.");
+                    return;
                 }
             }
-
-            if (reservationToUpdate != null) {
-                reservationToUpdate.setRoomNumber(newRoomNumber);
-                System.out.println("Room number updated successfully.");
-                System.out.println("Sending notification email to customer...");
-                System.out.println("Email sent.");
-            } else {
-                System.out.println("Reservation not found.");
-            }
-        } finally {
-            scanner.close();
+        }
+        if (reservationToUpdate != null) {
+            reservationToUpdate.setRoomNumber(newRoomNumber);
+            System.out.println("Room number updated successfully.");
+            sendNotificationEmail(reservationToUpdate.getCustomerEmail(), "Room number updated", "Your room number has been updated to " + newRoomNumber + ".");
+        } else {
+            System.out.println("Reservation not found.");
         }
     }
 
     public void changeEmployeePinNumber() {
         Scanner scanner = new Scanner(System.in);
-        try {
-            System.out.print("Enter employee name: ");
-            String employeeName = scanner.nextLine();
-            if (employeeName.isEmpty()) {
-                System.out.println("Employee name cannot be empty.");
-                return;
-            }
-
-            System.out.print("Enter new PIN number: ");
-            String newPin = scanner.nextLine();
-            if (newPin.isEmpty()) {
-                System.out.println("PIN number cannot be empty.");
-                return;
-            }
-
-            Employee employeeToUpdate = null;
-            for (Employee employee : employees) {
-                if (employee.getName().equalsIgnoreCase(employeeName)) {
-                    System.out.println("Employee found: " + employee);
-                    System.out.print("Are you sure you want to change the PIN number to " + newPin + "? (yes/no): ");
-                    String confirmation = scanner.nextLine();
-                    if (confirmation.equalsIgnoreCase("yes")) {
-                        employeeToUpdate = employee;
-                        break;
-                    } else {
-                        System.out.println("Update aborted.");
-                        return;
-                    }
+        System.out.print("Enter employee name: ");
+        String employeeName = scanner.nextLine();
+        System.out.print("Enter new PIN number: ");
+        String newPin = scanner.nextLine();
+        Employee employeeToUpdate = null;
+        for (Employee employee : employees) {
+            if (employee.getName().equalsIgnoreCase(employeeName)) {
+                System.out.println("Employee found: " + employee);
+                System.out.print("Are you sure you want to change the PIN number to " + newPin + "? (yes/no): ");
+                String confirmation = scanner.nextLine();
+                if (confirmation.equalsIgnoreCase("yes")) {
+                    employeeToUpdate = employee;
+                    break;
+                } else {
+                    System.out.println("Update aborted.");
+                    return;
                 }
             }
+        }
+        if (employeeToUpdate != null) {
+            employeeToUpdate.setPinNumber(newPin);
+            System.out.println("PIN number updated successfully.");
+            sendNotificationEmail(employeeToUpdate.getEmail(), "PIN number updated", "Your PIN number has been updated to " + newPin + ".");
+        } else {
+            System.out.println("Employee not found.");
+        }
+    }
 
-            if (employeeToUpdate != null) {
-                employeeToUpdate.setPinNumber(newPin);
-                System.out.println("PIN number updated successfully.");
-                System.out.println("Sending notification email to employee...");
-                System.out.println("Email sent.");
-            } else {
-                System.out.println("Employee not found.");
+    public void viewAllReservations() {
+        for (Reservation reservation : reservations) {
+            System.out.println(reservation);
+        }
+    }
+
+    public void addNewReservation() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter customer name: ");
+        String customerName = scanner.nextLine();
+        System.out.print("Enter reservation date (YYYY-MM-DD): ");
+        String date = scanner.nextLine();
+        System.out.print("Enter room number: ");
+        int roomNumber = Integer.parseInt(scanner.nextLine());
+        System.out.print("Enter customer email: ");
+        String customerEmail = scanner.nextLine();
+        Reservation newReservation = new Reservation(customerName, date, roomNumber, customerEmail);
+        reservations.add(newReservation);
+        System.out.println("Reservation added successfully.");
+        sendNotificationEmail(customerEmail, "Reservation confirmed", "Your reservation has been confirmed for " + date + " in room number " + roomNumber + ".");
+    }
+
+    public void cancelReservation() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter customer name: ");
+        String customerName = scanner.nextLine();
+        Reservation reservationToCancel = null;
+        for (Reservation reservation : reservations) {
+            if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
+                System.out.println("Reservation found: " + reservation);
+                System.out.print("Are you sure you want to cancel this reservation? (yes/no): ");
+                String confirmation = scanner.nextLine();
+                if (confirmation.equalsIgnoreCase("yes")) {
+                    reservationToCancel = reservation;
+                    break;
+                } else {
+                    System.out.println("Cancellation aborted.");
+                    return;
+                }
             }
-        } finally {
-            scanner.close();
+        }
+        if (reservationToCancel != null) {
+            reservations.remove(reservationToCancel);
+            System.out.println("Reservation cancelled successfully.");
+            sendNotificationEmail(reservationToCancel.getCustomerEmail(), "Reservation cancelled", "Your reservation has been cancelled.");
+        } else {
+            System.out.println("Reservation not found.");
         }
     }
 
