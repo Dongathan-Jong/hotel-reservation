@@ -70,339 +70,274 @@ public class Main5 {
       }
    }
 
-   public static int loginPortal() {
-      Scanner sc = new Scanner(System.in);
-      boolean employeeLoginPortal = false;
-      int returnValueInt = 1;
-      String employeeNumberInputString = "";
-      int goodEmployeeNumber = 1;
-      String employeePinNumberInputString;
-      int employeeNumAndPinMatch = 1;
-      System.out.println("WELCOME TO LOG IN PORTAL.");
+  public class HotelManagement {
 
-      while (!employeeLoginPortal) {
-         while (goodEmployeeNumber == 1) {
-            System.out.print("\nEnter your Employee Number: ");
-            employeeNumberInputString = sc.nextLine();
-            goodEmployeeNumber = checkEmployeeNumber(employeeNumberInputString);
+    public static int loginPortal() {
+        Scanner sc = new Scanner(System.in);
+        boolean employeeLoginPortal = false;
+        int returnValueInt = 1;
+        String employeeNumberInputString = "";
+        int goodEmployeeNumber = 1;
+        String employeePinNumberInputString;
+        int employeeNumAndPinMatch = 1;
+        System.out.println("WELCOME TO LOG IN PORTAL.");
 
-            if (goodEmployeeNumber == 0) {
-               returnValueInt = 0;
-            } else if (goodEmployeeNumber == 2) {
-               returnValueInt = 2;
+        while (!employeeLoginPortal) {
+            while (goodEmployeeNumber == 1) {
+                System.out.print("\nEnter your Employee Number: ");
+                employeeNumberInputString = sc.nextLine();
+                goodEmployeeNumber = checkEmployeeNumber(employeeNumberInputString);
+
+                if (goodEmployeeNumber == 0) {
+                    returnValueInt = 0;
+                } else if (goodEmployeeNumber == 2) {
+                    returnValueInt = 2;
+                }
             }
-         }
-
-         if (employeeNumAndPinMatch == 0) {
-            employeeNumAndPinMatch = 1;
-         }
-
-         while (employeeNumAndPinMatch == 1) {
-            System.out.print("\nEnter your Employee PIN Number: ");
-            employeePinNumberInputString = sc.nextLine();
-            employeeNumAndPinMatch = checkEmployeePinNumber(employeeNumberInputString, employeePinNumberInputString);
 
             if (employeeNumAndPinMatch == 0) {
-               employeeLoginPortal = false;
-               goodEmployeeNumber = 1;
-            } else {
-               goodEmployeeNumber = 2;
-               employeeLoginPortal = true;
+                employeeNumAndPinMatch = 1;
             }
-         }
-      }
-      return returnValueInt;
-   }
 
-   public static int checkEmployeeNumber(String employeeNumberInputString) {
-      final String EMPLOYEE_DATA_FILE = "employeeData.txt";
-      String line;
-      int employeeNumberInputInt;
-      String[] employeeLines;
-      int returnValueInt = 1;
+            while (employeeNumAndPinMatch == 1) {
+                System.out.print("\nEnter your Employee PIN Number: ");
+                employeePinNumberInputString = sc.nextLine();
+                employeeNumAndPinMatch = checkEmployeePinNumber(employeeNumberInputString, employeePinNumberInputString);
 
-      try {
-         BufferedReader in = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE));
+                if (employeeNumAndPinMatch == 0) {
+                    employeeLoginPortal = false;
+                    goodEmployeeNumber = 1;
+                } else {
+                    goodEmployeeNumber = 2;
+                    employeeLoginPortal = true;
+                }
+            }
+        }
+        return returnValueInt;
+    }
 
-         try {
-            employeeNumberInputInt = Integer.parseInt(employeeNumberInputString);
-            line = in.readLine();
+    public static int checkEmployeeNumber(String employeeNumberInputString) {
+        final String EMPLOYEE_DATA_FILE = "employeeData.txt";
+        String line;
+        int employeeNumberInputInt;
+        String[] employeeLines;
+        int returnValueInt = 1;
 
-            while (line != null) {
-               employeeLines = line.split(", ");
-
-               if (returnValueInt == 1) {
-                  if (employeeNumberInputInt == (Integer.parseInt(employeeLines[2]))) {
-                     if (employeeNumberInputString.length() == 6) {
-                        if (employeeNumberInputInt == 000000) {
-                           returnValueInt = 0;
+        try (BufferedReader in = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE))) {
+            try {
+                employeeNumberInputInt = Integer.parseInt(employeeNumberInputString);
+                while ((line = in.readLine()) != null) {
+                    employeeLines = line.split(", ");
+                    if (employeeNumberInputInt == Integer.parseInt(employeeLines[2])) {
+                        if (employeeNumberInputString.length() == 6) {
+                            if (employeeNumberInputInt == 000000) {
+                                returnValueInt = 0;
+                            } else {
+                                returnValueInt = 2;
+                            }
                         } else {
-                           returnValueInt = 2;
+                            returnValueInt = 1;
                         }
-                     } else {
-                        returnValueInt = 1;
-                     }
-                  } else {
-                     returnValueInt = 1;
-                  }
-               }
-               line = in.readLine();
+                        break; // Break the loop once the correct number is found
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter your 6 digit employee number. \n");
+                returnValueInt = 1;
             }
-         } catch (NumberFormatException e) {
-            System.out.println("Please enter your 6 digit employee number. \n");
-            returnValueInt = 1;
-         }
-         in.close();
-      } catch (IOException e) {
-         System.out.println(e + " error reading " + EMPLOYEE_DATA_FILE);
-      }
+        } catch (IOException e) {
+            System.out.println("Error reading " + EMPLOYEE_DATA_FILE + ": " + e.getMessage());
+        }
 
-      if (returnValueInt == 1) {
-         System.out.println("That employee number does not exist. \n");
-      }
-      return returnValueInt;
-   }
+        if (returnValueInt == 1) {
+            System.out.println("That employee number does not exist. \n");
+        }
+        return returnValueInt;
+    }
 
-   public static int checkEmployeePinNumber(String employeeNumberInputString, String employeePinNumberInputString) {
-      final String EMPLOYEE_DATA_FILE = "employeeData.txt";
-      int returnValueInt = 1;
-      String line;
-      int employeeNumberInputInt;
-      int employeePinNumberInputInt;
-      String[] employeeLines;
+    public static int checkEmployeePinNumber(String employeeNumberInputString, String employeePinNumberInputString) {
+        final String EMPLOYEE_DATA_FILE = "employeeData.txt";
+        int returnValueInt = 1;
+        String line;
+        int employeeNumberInputInt;
+        int employeePinNumberInputInt;
+        String[] employeeLines;
 
-      try {
-         BufferedReader in = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE));
+        try (BufferedReader in = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE))) {
+            try {
+                employeeNumberInputInt = Integer.parseInt(employeeNumberInputString);
+                employeePinNumberInputInt = Integer.parseInt(employeePinNumberInputString);
 
-         try {
-            employeeNumberInputInt = Integer.parseInt(employeeNumberInputString);
-            employeePinNumberInputInt = Integer.parseInt(employeePinNumberInputString);
-            line = in.readLine();
-
-            while (line != null) {
-               employeeLines = line.split(", ");
-
-               if (returnValueInt == 1) {
-                  if (employeePinNumberInputInt == 0) {
-                     returnValueInt = 0;
-                  } else if ((employeeNumberInputInt == (Integer.parseInt(employeeLines[2]))) && (employeePinNumberInputInt == (Integer.parseInt(employeeLines[3])))) {
-                     returnValueInt = 2;
-                  } else {
-                     returnValueInt = 1;
-                  }
-               }
-               line = in.readLine();
+                while ((line = in.readLine()) != null) {
+                    employeeLines = line.split(", ");
+                    if (employeePinNumberInputInt == 0) {
+                        returnValueInt = 0;
+                    } else if (employeeNumberInputInt == Integer.parseInt(employeeLines[2]) &&
+                               employeePinNumberInputInt == Integer.parseInt(employeeLines[3])) {
+                        returnValueInt = 2;
+                        break;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("This employee number does not exist. Please enter your 6 digit employee number. \n");
+                returnValueInt = 1;
             }
-         } catch (NumberFormatException e) {
-            System.out.println("This employee number does not exist. Please enter your 6 digit employee number. \n");
-            returnValueInt = 1;
-         }
-         in.close();
-      } catch (IOException e) {
-         System.out.println(e + " error in " + EMPLOYEE_DATA_FILE);
-         returnValueInt = 1;
-      }
+        } catch (IOException e) {
+            System.out.println("Error reading " + EMPLOYEE_DATA_FILE + ": " + e.getMessage());
+        }
 
-      if (returnValueInt == 1) {
-         System.out.println("Incorrect PIN number. Try again. \n");
-      }
-      return returnValueInt;
-   }
+        if (returnValueInt == 1) {
+            System.out.println("Incorrect PIN number. Try again. \n");
+        }
+        return returnValueInt;
+    }
 
-   public static String askForDate() {
-      Scanner sc = new Scanner(System.in);
-      int monthInt;
-      int dayInt;
-      int yearInt;
-      String monthStr = "";
-      String dayStr = "";
-      String yearStr = "";
-      boolean monthEnteredGood = false;
-      boolean dayEnteredGood = false;
-      boolean yearEnteredGood = false;
-      String fullDate = "";
+    public static String askForDate() {
+        Scanner sc = new Scanner(System.in);
+        int monthInt, dayInt, yearInt;
+        String monthStr = "", dayStr = "", yearStr = "";
+        boolean monthEnteredGood = false, dayEnteredGood = false, yearEnteredGood = false;
+        String fullDate = "";
 
-      System.out.println("Please enter the following:");
+        System.out.println("Please enter the following:");
 
-      while (!monthEnteredGood) {
-         try {
-            System.out.print("Enter month: ");
-            monthInt = sc.nextInt();
-            monthStr = "" + monthInt;
+        while (!monthEnteredGood) {
+            try {
+                System.out.print("Enter month: ");
+                monthInt = sc.nextInt();
+                monthStr = String.format("%02d", monthInt); // Format to two digits
 
-            if ((monthInt <= 12) && (monthInt >= 1)) {
-               if (monthStr.length() != 2) {
-                  monthStr = "0" + monthStr;
-               }
-               monthEnteredGood = true;
-            } else {
-               System.out.println("Please enter a month within the range of 1-12");
-               monthEnteredGood = false;
+                if (monthInt >= 1 && monthInt <= 12) {
+                    monthEnteredGood = true;
+                } else {
+                    System.out.println("Please enter a month within the range of 1-12");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter an integer for month. Try again");
+                sc.next(); 
             }
-         } catch (InputMismatchException e) {
-            System.out.println("Please enter an integer for month. Try again");
-            sc.next();
-            monthEnteredGood = false;
-         }
-      }
+        }
 
-      while (!dayEnteredGood) {
-         try {
-            System.out.print("Enter day: ");
-            dayInt = sc.nextInt();
-            dayStr = "" + dayInt;
+        while (!dayEnteredGood) {
+            try {
+                System.out.print("Enter day: ");
+                dayInt = sc.nextInt();
+                dayStr = String.format("%02d", dayInt); // Format to two digits
 
-            if ((dayInt <= 31) && (dayInt >= 1)) {
-               if (dayStr.length() != 2) {
-                  dayStr = "0" + dayStr;
-               }
-               dayEnteredGood = true;
-            } else {
-               System.out.println("Please enter a day within the range of 1-31");
-               dayEnteredGood = false;
+                if (dayInt >= 1 && dayInt <= 31) {
+                    dayEnteredGood = true;
+                } else {
+                    System.out.println("Please enter a day within the range of 1-31");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter an integer for day. Try again");
+                sc.next(); 
             }
-         } catch (InputMismatchException e) {
-            System.out.println("Please enter an integer for day. Try again");
-            sc.next();
-            dayEnteredGood = false;
-         }
-      }
+        }
 
-      while (!yearEnteredGood) {
-         try {
-            System.out.print("Enter year: ");
-            yearInt = sc.nextInt();
-            yearStr = "" + yearInt;
+        while (!yearEnteredGood) {
+            try {
+                System.out.print("Enter year: ");
+                yearInt = sc.nextInt();
+                yearStr = String.valueOf(yearInt);
 
-            if ((yearStr.length() == 4) && (yearInt >= 2020)) {
-               yearEnteredGood = true;
-            } else {
-               System.out.println("Please enter a 4 digit year (ex: 2022)");
-               yearEnteredGood = false;
+                if (yearStr.length() == 4 && yearInt >= 2020) {
+                    yearEnteredGood = true;
+                } else {
+                    System.out.println("Please enter a 4 digit year (ex: 2022)");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter an integer for year. Try again");
+                sc.next();
             }
-         } catch (InputMismatchException e) {
-            System.out.println("Please enter an integer for year. Try again");
-            sc.next();
-            yearEnteredGood = false;
-         }
-      }
-      fullDate = monthStr + "/" + dayStr + "/" + yearStr;
-      sc.nextLine();
-      return fullDate;
-   }
+        }
 
-   public static void availableRoomsPerDate(String fullDate) {
-      final String ROOM_DATA_FILE = "hotelRoomData.txt";
-      final String BOOKING_DATA_FILE = "bookingData.txt";
-      String roomDataLine;
-      String bookingDataLine;
-      String[] roomDataLines;
-      String[] bookingDataLines;
-      ArrayList<String> availableRooms = new ArrayList<>();
+        fullDate = monthStr + "/" + dayStr + "/" + yearStr;
+        sc.nextLine(); // Clear the buffer
+        return fullDate;
+    }
 
-      try {
-         BufferedReader roomIn = new BufferedReader(new FileReader(ROOM_DATA_FILE));
-         roomDataLine = roomIn.readLine();
+    public static void availableRoomsPerDate(String fullDate) {
+        final String ROOM_DATA_FILE = "hotelRoomData.txt";
+        final String BOOKING_DATA_FILE = "bookingData.txt";
+        ArrayList<String> availableRooms = new ArrayList<>();
 
-         while (roomDataLine != null) {
-            roomDataLines = roomDataLine.split(", ");
-            availableRooms.add(roomDataLines[0]);
-            roomDataLine = roomIn.readLine();
-         }
-
-         roomIn.close();
-      } catch (IOException e) {
-         System.out.println("Error reading room data file.");
-      }
-
-      try {
-         BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE));
-         bookingDataLine = bookingIn.readLine();
-
-         while (bookingDataLine != null) {
-            bookingDataLines = bookingDataLine.split(", ");
-
-            if (bookingDataLines[1].equals(fullDate)) {
-               availableRooms.remove(bookingDataLines[0]);
+        try (BufferedReader roomIn = new BufferedReader(new FileReader(ROOM_DATA_FILE))) {
+            String roomDataLine;
+            while ((roomDataLine = roomIn.readLine()) != null) {
+                String[] roomDataLines = roomDataLine.split(", ");
+                availableRooms.add(roomDataLines[0]);
             }
-            bookingDataLine = bookingIn.readLine();
-         }
+        } catch (IOException e) {
+            System.out.println("Error reading room data file: " + e.getMessage());
+        }
 
-         bookingIn.close();
-      } catch (IOException e) {
-         System.out.println("Error reading booking data file.");
-      }
-
-      System.out.println("Available Rooms on " + fullDate + ":");
-      for (String room : availableRooms) {
-         System.out.println(room);
-      }
-   }
-
-   public static void allReservationsPerDate(String fullDate) {
-      final String BOOKING_DATA_FILE = "bookingData.txt";
-      String bookingDataLine;
-      String[] bookingDataLines;
-      ArrayList<String> reservations = new ArrayList<>();
-
-      try {
-         BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE));
-         bookingDataLine = bookingIn.readLine();
-
-         while (bookingDataLine != null) {
-            bookingDataLines = bookingDataLine.split(", ");
-
-            if (bookingDataLines[1].equals(fullDate)) {
-               reservations.add(bookingDataLine);
+        try (BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE))) {
+            String bookingDataLine;
+            while ((bookingDataLine = bookingIn.readLine()) != null) {
+                String[] bookingDataLines = bookingDataLine.split(", ");
+                if (bookingDataLines[1].equals(fullDate)) {
+                    availableRooms.remove(bookingDataLines[0]);
+                }
             }
-            bookingDataLine = bookingIn.readLine();
-         }
+        } catch (IOException e) {
+            System.out.println("Error reading booking data file: " + e.getMessage());
+        }
 
-         bookingIn.close();
-      } catch (IOException e) {
-         System.out.println("Error reading booking data file.");
-      }
+        System.out.println("Available Rooms on " + fullDate + ":");
+        for (String room : availableRooms) {
+            System.out.println(room);
+        }
+    }
 
-      System.out.println("Reservations on " + fullDate + ":");
-      for (String reservation : reservations) {
-         System.out.println(reservation);
-      }
-   }
+    public static void allReservationsPerDate(String fullDate) {
+        final String BOOKING_DATA_FILE = "bookingData.txt";
+        ArrayList<String> reservations = new ArrayList<>();
 
-   public static void allReservationsPerName() {
-      final String BOOKING_DATA_FILE = "bookingData.txt";
-      String bookingDataLine;
-      String[] bookingDataLines;
-      String name;
-      ArrayList<String> reservations = new ArrayList<>();
-      Scanner sc = new Scanner(System.in);
-
-      System.out.print("Enter the customer name: ");
-      name = sc.nextLine();
-
-      try {
-         BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE));
-         bookingDataLine = bookingIn.readLine();
-
-         while (bookingDataLine != null) {
-            bookingDataLines = bookingDataLine.split(", ");
-
-            if (bookingDataLines[2].equalsIgnoreCase(name)) {
-               reservations.add(bookingDataLine);
+        try (BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE))) {
+            String bookingDataLine;
+            while ((bookingDataLine = bookingIn.readLine()) != null) {
+                String[] bookingDataLines = bookingDataLine.split(", ");
+                if (bookingDataLines[1].equals(fullDate)) {
+                    reservations.add(bookingDataLine);
+                }
             }
-            bookingDataLine = bookingIn.readLine();
-         }
+        } catch (IOException e) {
+            System.out.println("Error reading booking data file: " + e.getMessage());
+        }
 
-         bookingIn.close();
-      } catch (IOException e) {
-         System.out.println("Error reading booking data file.");
-      }
+        System.out.println("Reservations on " + fullDate + ":");
+        for (String reservation : reservations) {
+            System.out.println(reservation);
+        }
+    }
 
-      System.out.println("Reservations under " + name + ":");
-      for (String reservation : reservations) {
-         System.out.println(reservation);
-      }
-   }
+    public static void allReservationsPerName() {
+        final String BOOKING_DATA_FILE = "bookingData.txt";
+        ArrayList<String> reservations = new ArrayList<>();
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the customer name: ");
+        String name = sc.nextLine();
+
+        try (BufferedReader bookingIn = new BufferedReader(new FileReader(BOOKING_DATA_FILE))) {
+            String bookingDataLine;
+            while ((bookingDataLine = bookingIn.readLine()) != null) {
+                String[] bookingDataLines = bookingDataLine.split(", ");
+                if (bookingDataLines[2].equalsIgnoreCase(name)) {
+                    reservations.add(bookingDataLine);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading booking data file: " + e.getMessage());
+        }
+
+        System.out.println("Reservations under " + name + ":");
+        for (String reservation : reservations) {
+            System.out.println(reservation);
+        }
+    }
+
 
    public static void bookingReservations() {
       final String BOOKING_DATA_FILE = "bookingData.txt";
