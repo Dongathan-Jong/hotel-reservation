@@ -55,11 +55,6 @@ public class Main5 {
             } else if (option.trim().equals("4")) {
                bookingReservations();
                menuOption = true;
-            } else if (option.trim().equals("5")) {
-            } else if (option.trim().equals("6")) {
-            } else if (option.trim().equals("7")) {
-            } else if (option.trim().equals("8")) {
-            } else if (option.trim().equals("9")) {
             } else if (adminOrEmployee == 0) {
                if (option.trim().equals("10")) {
                   System.out.println("option 10!!!! ");
@@ -521,189 +516,319 @@ public void changeCustomerNameForReservation() {
     }
 }
 
-public void changeDateForReservation() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter customer name: ");
-    String customerName = scanner.nextLine();
-    System.out.print("Enter new reservation date (YYYY-MM-DD): ");
-    String newDate = scanner.nextLine();
-    Reservation reservationToUpdate = null;
-    for (Reservation reservation : reservations) {
-        if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
-            System.out.println("Reservation found: " + reservation);
-            System.out.print("Are you sure you want to change the date to " + newDate + "? (yes/no): ");
-            String confirmation = scanner.nextLine();
-            if (confirmation.equalsIgnoreCase("yes")) {
-                reservationToUpdate = reservation;
-                break;
-            } else {
-                System.out.println("Update aborted.");
+public class HotelManagement {
+
+    private List<Reservation> reservations = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>();
+    private List<Employee> employees = new ArrayList<>();
+
+    public void changeDateForReservation() {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.print("Enter customer name: ");
+            String customerName = scanner.nextLine();
+            if (customerName.isEmpty()) {
+                System.out.println("Customer name cannot be empty.");
                 return;
             }
-        }
-    }
-    if (reservationToUpdate != null) {
-        reservationToUpdate.setDate(newDate);
-        System.out.println("Reservation date updated successfully.");
-        System.out.println("Sending notification email to customer...");
-        System.out.println("Email sent.");
-    } else {
-        System.out.println("Reservation not found.");
-    }
-}
 
-public void changeRoomNumberForReservation() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter customer name: ");
-    String customerName = scanner.nextLine();
-    System.out.print("Enter new room number: ");
-    int newRoomNumber = Integer.parseInt(scanner.nextLine());
-    Reservation reservationToUpdate = null;
-    for (Reservation reservation : reservations) {
-        if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
-            System.out.println("Reservation found: " + reservation);
-            System.out.print("Are you sure you want to change the room number to " + newRoomNumber + "? (yes/no): ");
-            String confirmation = scanner.nextLine();
-            if (confirmation.equalsIgnoreCase("yes")) {
-                reservationToUpdate = reservation;
-                break;
-            } else {
-                System.out.println("Update aborted.");
+            System.out.print("Enter new reservation date (YYYY-MM-DD): ");
+            String newDate = scanner.nextLine();
+            if (newDate.isEmpty()) {
+                System.out.println("Date cannot be empty.");
                 return;
             }
+
+            Reservation reservationToUpdate = null;
+            for (Reservation reservation : reservations) {
+                if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
+                    System.out.println("Reservation found: " + reservation);
+                    System.out.print("Are you sure you want to change the date to " + newDate + "? (yes/no): ");
+                    String confirmation = scanner.nextLine();
+                    if (confirmation.equalsIgnoreCase("yes")) {
+                        reservationToUpdate = reservation;
+                        break;
+                    } else {
+                        System.out.println("Update aborted.");
+                        return;
+                    }
+                }
+            }
+
+            if (reservationToUpdate != null) {
+                reservationToUpdate.setDate(newDate);
+                System.out.println("Reservation date updated successfully.");
+                System.out.println("Sending notification email to customer...");
+                System.out.println("Email sent.");
+            } else {
+                System.out.println("Reservation not found.");
+            }
+        } finally {
+            scanner.close();
         }
     }
-    if (reservationToUpdate != null) {
-        reservationToUpdate.setRoomNumber(newRoomNumber);
-        System.out.println("Room number updated successfully.");
-        System.out.println("Sending notification email to customer...");
-        System.out.println("Email sent.");
-    } else {
-        System.out.println("Reservation not found.");
-    }
-}
 
-public void changeEmployeePinNumber() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter employee name: ");
-    String employeeName = scanner.nextLine();
-    System.out.print("Enter new PIN number: ");
-    String newPin = scanner.nextLine();
-    Employee employeeToUpdate = null;
-    for (Employee employee : employees) {
-        if (employee.getName().equalsIgnoreCase(employeeName)) {
-            System.out.println("Employee found: " + employee);
-            System.out.print("Are you sure you want to change the PIN number to " + newPin + "? (yes/no): ");
-            String confirmation = scanner.nextLine();
-            if (confirmation.equalsIgnoreCase("yes")) {
-                employeeToUpdate = employee;
-                break;
-            } else {
-                System.out.println("Update aborted.");
+    public void changeRoomNumberForReservation() {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.print("Enter customer name: ");
+            String customerName = scanner.nextLine();
+            if (customerName.isEmpty()) {
+                System.out.println("Customer name cannot be empty.");
                 return;
             }
-        }
-    }
-    if (employeeToUpdate != null) {
-        employeeToUpdate.setPinNumber(newPin);
-        System.out.println("PIN number updated successfully.");
-        System.out.println("Sending notification email to employee...");
-        System.out.println("Email sent.");
-    } else {
-        System.out.println("Employee not found.");
-    }
-}
 
-}
-
-public void addHotelRoom() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter room number: ");
-    int roomNumber = Integer.parseInt(scanner.nextLine());
-    System.out.print("Enter room type: ");
-    String roomType = scanner.nextLine();
-    System.out.print("Enter room price: ");
-    double roomPrice = Double.parseDouble(scanner.nextLine());
-    System.out.print("Enter number of beds: ");
-    int numberOfBeds = Integer.parseInt(scanner.nextLine());
-    Room room = new Room(roomNumber, roomType, roomPrice, numberOfBeds);
-    rooms.add(room);
-    System.out.println("Room added successfully.");
-    System.out.println("Updating hotel room database...");
-    System.out.println("Database updated.");
-}
-
-public void deleteHotelRoom() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter room number to delete: ");
-    int roomNumber = Integer.parseInt(scanner.nextLine());
-    Room roomToRemove = null;
-    for (Room room : rooms) {
-        if (room.getRoomNumber() == roomNumber) {
-            System.out.println("Room found: " + room);
-            System.out.print("Are you sure you want to delete this room? (yes/no): ");
-            String confirmation = scanner.nextLine();
-            if (confirmation.equalsIgnoreCase("yes")) {
-                roomToRemove = room;
-                break;
-            } else {
-                System.out.println("Deletion aborted.");
+            System.out.print("Enter new room number: ");
+            int newRoomNumber;
+            try {
+                newRoomNumber = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid room number format.");
                 return;
             }
+
+            Reservation reservationToUpdate = null;
+            for (Reservation reservation : reservations) {
+                if (reservation.getCustomerName().equalsIgnoreCase(customerName)) {
+                    System.out.println("Reservation found: " + reservation);
+                    System.out.print("Are you sure you want to change the room number to " + newRoomNumber + "? (yes/no): ");
+                    String confirmation = scanner.nextLine();
+                    if (confirmation.equalsIgnoreCase("yes")) {
+                        reservationToUpdate = reservation;
+                        break;
+                    } else {
+                        System.out.println("Update aborted.");
+                        return;
+                    }
+                }
+            }
+
+            if (reservationToUpdate != null) {
+                reservationToUpdate.setRoomNumber(newRoomNumber);
+                System.out.println("Room number updated successfully.");
+                System.out.println("Sending notification email to customer...");
+                System.out.println("Email sent.");
+            } else {
+                System.out.println("Reservation not found.");
+            }
+        } finally {
+            scanner.close();
         }
     }
-    if (roomToRemove != null) {
-        rooms.remove(roomToRemove);
-        System.out.println("Room deleted successfully.");
-        System.out.println("Updating hotel room database...");
-        System.out.println("Database updated.");
-    } else {
-        System.out.println("Room not found.");
-    }
-}
 
-public void addEmployee() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter employee name: ");
-    String name = scanner.nextLine();
-    System.out.print("Enter employee PIN number: ");
-    String pinNumber = scanner.nextLine();
-    System.out.print("Enter employee position: ");
-    String position = scanner.nextLine();
-    System.out.print("Enter employee salary: ");
-    double salary = Double.parseDouble(scanner.nextLine());
-    Employee employee = new Employee(name, pinNumber, position, salary);
-    employees.add(employee);
-    System.out.println("Employee added successfully.");
-    System.out.println("Updating employee records...");
-    System.out.println("Employee records updated.");
-}
-
-public void deleteEmployee() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter employee name to delete: ");
-    String name = scanner.nextLine();
-    Employee employeeToRemove = null;
-    for (Employee employee : employees) {
-        if (employee.getName().equalsIgnoreCase(name)) {
-            System.out.println("Employee found: " + employee);
-            System.out.print("Are you sure you want to delete this employee? (yes/no): ");
-            String confirmation = scanner.nextLine();
-            if (confirmation.equalsIgnoreCase("yes")) {
-                employeeToRemove = employee;
-                break;
-            } else {
-                System.out.println("Deletion aborted.");
+    public void changeEmployeePinNumber() {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.print("Enter employee name: ");
+            String employeeName = scanner.nextLine();
+            if (employeeName.isEmpty()) {
+                System.out.println("Employee name cannot be empty.");
                 return;
             }
+
+            System.out.print("Enter new PIN number: ");
+            String newPin = scanner.nextLine();
+            if (newPin.isEmpty()) {
+                System.out.println("PIN number cannot be empty.");
+                return;
+            }
+
+            Employee employeeToUpdate = null;
+            for (Employee employee : employees) {
+                if (employee.getName().equalsIgnoreCase(employeeName)) {
+                    System.out.println("Employee found: " + employee);
+                    System.out.print("Are you sure you want to change the PIN number to " + newPin + "? (yes/no): ");
+                    String confirmation = scanner.nextLine();
+                    if (confirmation.equalsIgnoreCase("yes")) {
+                        employeeToUpdate = employee;
+                        break;
+                    } else {
+                        System.out.println("Update aborted.");
+                        return;
+                    }
+                }
+            }
+
+            if (employeeToUpdate != null) {
+                employeeToUpdate.setPinNumber(newPin);
+                System.out.println("PIN number updated successfully.");
+                System.out.println("Sending notification email to employee...");
+                System.out.println("Email sent.");
+            } else {
+                System.out.println("Employee not found.");
+            }
+        } finally {
+            scanner.close();
         }
     }
-    if (employeeToRemove != null) {
-        employees.remove(employeeToRemove);
-        System.out.println("Employee deleted successfully.");
-        System.out.println("Updating employee records...");
-        System.out.println("Employee records updated.");
-    } else {
-        System.out.println("Employee not found.");
+
+    public void addHotelRoom() {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.print("Enter room number: ");
+            int roomNumber;
+            try {
+                roomNumber = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid room number format.");
+                return;
+            }
+
+            System.out.print("Enter room type: ");
+            String roomType = scanner.nextLine();
+            if (roomType.isEmpty()) {
+                System.out.println("Room type cannot be empty.");
+                return;
+            }
+
+            System.out.print("Enter room price: ");
+            double roomPrice;
+            try {
+                roomPrice = Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid room price format.");
+                return;
+            }
+
+            System.out.print("Enter number of beds: ");
+            int numberOfBeds;
+            try {
+                numberOfBeds = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number of beds format.");
+                return;
+            }
+
+            Room room = new Room(roomNumber, roomType, roomPrice, numberOfBeds);
+            rooms.add(room);
+            System.out.println("Room added successfully.");
+            System.out.println("Updating hotel room database...");
+            System.out.println("Database updated.");
+        } finally {
+            scanner.close();
+        }
+    }
+
+    public void deleteHotelRoom() {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.print("Enter room number to delete: ");
+            int roomNumber;
+            try {
+                roomNumber = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid room number format.");
+                return;
+            }
+
+            Room roomToRemove = null;
+            for (Room room : rooms) {
+                if (room.getRoomNumber() == roomNumber) {
+                    System.out.println("Room found: " + room);
+                    System.out.print("Are you sure you want to delete this room? (yes/no): ");
+                    String confirmation = scanner.nextLine();
+                    if (confirmation.equalsIgnoreCase("yes")) {
+                        roomToRemove = room;
+                        break;
+                    } else {
+                        System.out.println("Deletion aborted.");
+                        return;
+                    }
+                }
+            }
+
+            if (roomToRemove != null) {
+                rooms.remove(roomToRemove);
+                System.out.println("Room deleted successfully.");
+                System.out.println("Updating hotel room database...");
+                System.out.println("Database updated.");
+            } else {
+                System.out.println("Room not found.");
+            }
+        } finally {
+            scanner.close();
+        }
+    }
+
+    public void addEmployee() {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.print("Enter employee name: ");
+            String name = scanner.nextLine();
+            if (name.isEmpty()) {
+                System.out.println("Employee name cannot be empty.");
+                return;
+            }
+
+            System.out.print("Enter employee PIN number: ");
+            String pinNumber = scanner.nextLine();
+            if (pinNumber.isEmpty()) {
+                System.out.println("PIN number cannot be empty.");
+                return;
+            }
+
+            System.out.print("Enter employee position: ");
+            String position = scanner.nextLine();
+            if (position.isEmpty()) {
+                System.out.println("Position cannot be empty.");
+                return;
+            }
+
+            System.out.print("Enter employee salary: ");
+            double salary;
+            try {
+                salary = Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid salary format.");
+                return;
+            }
+
+            Employee employee = new Employee(name, pinNumber, position, salary);
+            employees.add(employee);
+            System.out.println("Employee added successfully.");
+            System.out.println("Updating employee records...");
+            System.out.println("Employee records updated.");
+        } finally {
+            scanner.close();
+        }
+    }
+
+    public void deleteEmployee() {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.print("Enter employee name to delete: ");
+            String name = scanner.nextLine();
+            if (name.isEmpty()) {
+                System.out.println("Employee name cannot be empty.");
+                return;
+            }
+
+            Employee employeeToRemove = null;
+            for (Employee employee : employees) {
+                if (employee.getName().equalsIgnoreCase(name)) {
+                    System.out.println("Employee found: " + employee);
+                    System.out.print("Are you sure you want to delete this employee? (yes/no): ");
+                    String confirmation = scanner.nextLine();
+                    if (confirmation.equalsIgnoreCase("yes")) {
+                        employeeToRemove = employee;
+                        break;
+                    } else {
+                        System.out.println("Deletion aborted.");
+                        return;
+                    }
+                }
+            }
+
+            if (employeeToRemove != null) {
+                employees.remove(employeeToRemove);
+                System.out.println("Employee deleted successfully.");
+                System.out.println("Updating employee records...");
+                System.out.println("Employee records updated.");
+            } else {
+                System.out.println("Employee not found.");
+            }
+        } finally {
+            scanner.close();
+        }
     }
 }
